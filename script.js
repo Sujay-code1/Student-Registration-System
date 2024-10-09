@@ -4,7 +4,13 @@ let editingRow = null;
 
 // Load student data from localStorage when the page loads
 window.onload = function() {
-    const students = JSON.parse(localStorage.getItem('students')) || [];
+    let students = [];
+    try {
+        students = JSON.parse(localStorage.getItem('students')) || [];
+    } catch (error) {
+        console.error("Error parsing JSON from localStorage", error);
+    }
+
     students.forEach(student => {
         addStudentToTable(student);
     });
@@ -31,8 +37,9 @@ studentForm.addEventListener('submit', function(event) {
         // Update student in localStorage
         updateStudentInStorage(editingRow.rowIndex - 1, studentData);
 
-        editingRow = null; 
-        // Add new row
+        editingRow = null; // Reset editing row
+    } else {
+        // Add new row for a new student
         addStudentToTable(studentData);
         saveStudentToStorage(studentData);
     }
